@@ -139,8 +139,11 @@ export default function Hero() {
       {/* Animated dust particles (disabled on mobile or reduced-motion) */}
       {!prefersReduced && !isMobile && <Particles count={10} />}
 
-      {/* Content */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-screen lg:min-h-0 flex flex-col items-center justify-center text-center px-6 will-change-transform pb-24 sm:pb-0">
+      {/* Content wrapper: no double min-heights; add bottom padding on sm+ to avoid overlap with absolute trust bar */}
+      <motion.div
+        style={{ y, opacity, scale }}
+        className="relative z-10 min-h-full flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 pb-12 sm:pb-32 will-change-transform"
+      >
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -196,24 +199,24 @@ export default function Hero() {
             Our Services
           </a>
         </motion.div>
+      </motion.div>
 
-        {/* Trust bar - static on mobile to prevent overlap, absolute on larger screens */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.5 }}
-          className="pointer-events-none mt-10 sm:mt-0 sm:absolute sm:bottom-8 left-1/2 sm:-translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400"
-        >
-          <div className="flex items-center gap-4 text-xs uppercase tracking-widest">
-            <span className="text-zinc-300/90">Licensed</span>
-            <span className="h-1 w-1 rounded-full bg-zinc-500/70" />
-            <span className="text-zinc-300/90">Bonded</span>
-            <span className="h-1 w-1 rounded-full bg-zinc-500/70" />
-            <span className="text-zinc-300/90">Insured</span>
-          </div>
-          <div className="h-10 w-px mx-auto bg-gradient-to-b from-transparent via-zinc-500 to-transparent" />
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
-        </motion.div>
+      {/* Trust bar - static on mobile to prevent overlap, absolute on larger screens positioned relative to the section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9, duration: 0.5 }}
+        className="pointer-events-none mt-10 sm:mt-0 sm:absolute sm:bottom-8 left-1/2 sm:-translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400 z-10"
+      >
+        <div className="flex items-center gap-4 text-xs uppercase tracking-widest">
+          <span className="text-zinc-300/90">Licensed</span>
+          <span className="h-1 w-1 rounded-full bg-zinc-500/70" />
+          <span className="text-zinc-300/90">Bonded</span>
+          <span className="h-1 w-1 rounded-full bg-zinc-500/70" />
+          <span className="text-zinc-300/90">Insured</span>
+        </div>
+        <div className="h-10 w-px mx-auto bg-gradient-to-b from-transparent via-zinc-500 to-transparent" />
+        <span className="text-xs uppercase tracking-widest">Scroll</span>
       </motion.div>
     </section>
   )
