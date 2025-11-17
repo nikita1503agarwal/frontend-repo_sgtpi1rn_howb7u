@@ -51,10 +51,10 @@ export default function Hero() {
     }
   }, [prefersReduced, isDesktop])
 
-  // Smaller background photo on mobile to reduce bandwidth/GPU
+  // Highly compressed WebP background photos (smaller bandwidth/GPU)
   const bgUrl = isMobile
-    ? "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=900&auto=format&fit=crop"
-    : "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop"
+    ? "https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=webp&q=45&w=900&fit=crop"
+    : "https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=webp&q=55&w=1600&fit=crop"
 
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
