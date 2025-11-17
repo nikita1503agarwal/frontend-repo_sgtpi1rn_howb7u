@@ -45,7 +45,7 @@ export default function Hero() {
   }, [prefersReduced, isDesktop])
 
   return (
-    <section className="relative h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
+    <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
       {/* Construction background photography layer (parallax + slow zoom) */}
       <motion.div
         aria-hidden
@@ -122,7 +122,7 @@ export default function Hero() {
       {!prefersReduced && <Particles count={14} />}
 
       {/* Content */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform pb-28 sm:pb-0">
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-[100svh] flex flex-col items-center justify-center text-center px-6 will-change-transform pb-28 sm:pb-0">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -163,8 +163,13 @@ export default function Hero() {
           <Badge icon={<Hammer className="h-4 w-4" />} label="Self-Perform Crews" />
         </motion.div>
 
-        {/* CTAs */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.95, duration: 0.8 }} className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none">
+        {/* CTAs - flow layout on mobile, centered with relative spacing */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.95, duration: 0.8 }}
+          className="mt-8 sm:mt-10 mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-[28rem]"
+        >
           <a href="#projects" className="group inline-flex justify-center items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-white backdrop-blur-md transition hover:bg-white/15 w-full sm:w-auto">
             <span className="font-semibold">Explore Projects</span>
             <span className="h-2 w-2 rounded-full bg-gradient-to-tr from-amber-400 to-cyan-300 shadow-[0_0_20px_2px_rgba(103,232,249,0.5)] group-hover:scale-110 transition-transform" />
