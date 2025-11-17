@@ -21,6 +21,8 @@ export default function App() {
     >
       <div className="min-h-screen bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white [backface-visibility:hidden]">
         <Navbar />
+        {/* Spacer to offset the fixed header height so content doesn't sit underneath */}
+        <div aria-hidden className="h-20 sm:h-24" />
         <Hero />
         <Marquee />
         <Stats />
