@@ -19,7 +19,7 @@ export default function App() {
       transition={{ type: 'tween', duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       reducedMotion={{ reduce: 'user', noPreference: 'motion' }}
     >
-      <div className="min-h-screen bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white">
+      <div className="min-h-full bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white">
         <Navbar />
         {/* Spacer to offset the fixed header height so content doesn't sit underneath */}
         <div aria-hidden className="h-20 sm:h-24" />

@@ -81,7 +81,7 @@ export default function Hero() {
   const bgJpg = isMobile ? bgJpgMobile : bgJpgDesktop
 
   return (
-    <section className="relative min-h-screen lg:min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
+    <section className="hero background-section relative min-h-[100vh] w-full overflow-hidden bg-[#0a0c10]">
       {/* Construction background photography layer (parallax + slow zoom) */}
       <motion.div
         aria-hidden
