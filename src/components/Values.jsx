@@ -19,16 +19,16 @@ export default function Values() {
           {values.map(({ icon: Icon, title, text }, i) => (
             <motion.div
               key={title}
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: i * 0.05, duration: 0.6 }}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6"
+              transition={{ delay: i * 0.06, duration: 0.9 }}
+              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 will-change-transform"
             >
               <motion.div
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
-                transition={{ duration: 1.2, ease: 'easeInOut' }}
+                transition={{ duration: 1.4, ease: 'easeInOut' }}
                 className="absolute inset-0 opacity-10"
               >
                 <svg width="100%" height="100%">
@@ -42,7 +42,7 @@ export default function Values() {
                 </svg>
               </motion.div>
               <div className="flex items-center gap-4">
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="h-12 w-12 rounded-xl bg-gradient-to-tr from-cyan-300/15 to-amber-400/15 border border-white/10 flex items-center justify-center text-cyan-200">
+                <motion.div initial={{ scale: 0.95, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }} className="h-12 w-12 rounded-xl bg-gradient-to-tr from-cyan-300/15 to-amber-400/15 border border-white/10 flex items-center justify-center text-cyan-200">
                   <Icon />
                 </motion.div>
                 <h3 className="text-lg font-semibold">{title}</h3>

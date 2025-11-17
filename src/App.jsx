@@ -1,3 +1,4 @@
+import { MotionConfig } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
@@ -14,20 +15,25 @@ import Footer from './components/Footer'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white">
-      <Navbar />
-      <Hero />
-      <Marquee />
-      <Stats />
-      <About />
-      <Services />
-      <Projects />
-      <Process />
-      <Values />
-      <Testimonials />
-      <Legacy />
-      <CTA />
-      <Footer />
-    </div>
+    <MotionConfig
+      transition={{ type: 'tween', duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      reducedMotion={{ reduce: 'user', noPreference: 'motion' }}
+    >
+      <div className="min-h-screen bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white [backface-visibility:hidden]">
+        <Navbar />
+        <Hero />
+        <Marquee />
+        <Stats />
+        <About />
+        <Services />
+        <Projects />
+        <Process />
+        <Values />
+        <Testimonials />
+        <Legacy />
+        <CTA />
+        <Footer />
+      </div>
+    </MotionConfig>
   )
 }

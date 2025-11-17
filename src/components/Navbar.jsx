@@ -27,9 +27,9 @@ export default function Navbar() {
     <div className="fixed top-0 inset-x-0 z-50">
       <motion.div
         className={`mx-auto mt-3 w-[92%] max-w-6xl rounded-2xl px-5 py-3 flex items-center justify-between transition backdrop-blur-md border ${scrolled ? 'bg-white/[0.06] border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.25)]' : 'bg-white/[0.03] border-white/10'}`}
-        initial={{ y: -24, opacity: 0 }}
+        initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
+        transition={{ duration: 0.9, ease: [0.22,1,0.36,1] }}
       >
         <a href="#" className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-md bg-gradient-to-tr from-amber-400 to-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.35)]" />

@@ -5,13 +5,13 @@ export default function About() {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+      transition: { staggerChildren: 0.1, delayChildren: 0.15 },
     },
   }
 
   const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
   }
 
   return (
@@ -24,10 +24,10 @@ export default function About() {
       <div className="container mx-auto px-6">
         <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="grid md:grid-cols-12 gap-10 items-center">
           <motion.div variants={item} className="md:col-span-5">
-            <div className="h-[420px] rounded-xl overflow-hidden relative shadow-2xl">
-              <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1974&auto=format&fit=crop" alt="Precision Construction" className="h-full w-full object-cover scale-[1.02]" />
+            <div className="h-[420px] rounded-xl overflow-hidden relative shadow-2xl will-change-transform">
+              <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1974&auto=format&fit=crop" alt="Precision Construction" className="h-full w-full object-cover scale-[1.02]" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.3 }} className="absolute -bottom-6 -right-6 h-40 w-40 border border-white/20 rounded-xl backdrop-blur-md bg-white/5" />
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.9 }} className="absolute -bottom-6 -right-6 h-40 w-40 border border-white/20 rounded-xl backdrop-blur-md bg-white/5" />
             </div>
           </motion.div>
           <motion.div variants={item} className="md:col-span-7">

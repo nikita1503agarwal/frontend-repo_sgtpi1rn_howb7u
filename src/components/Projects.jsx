@@ -22,12 +22,12 @@ const projects = [
 function Card({ p, index }) {
   return (
     <motion.div
-      whileHover={{ y: -6, rotateX: 2 }}
-      initial={{ opacity: 0, y: 24 }}
+      whileHover={{ y: -4, rotateX: 1.5 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
-      className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10"
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: index * 0.08 }}
+      className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 will-change-transform"
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div className="aspect-[16/10] overflow-hidden">
@@ -54,7 +54,7 @@ function Card({ p, index }) {
 export default function Projects() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40])
+  const y = useTransform(scrollYProgress, [0, 1], [40, -30])
 
   return (
     <section id="projects" ref={ref} className="relative bg-[#0a0c10] text-white py-28">
