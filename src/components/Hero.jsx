@@ -19,11 +19,32 @@ export default function Hero() {
       setIsDesktop(mqDesktop.matches)
     }
     update()
-    mqMobile.addEventListener?.('change', update)
-    mqDesktop.addEventListener?.('change', update)
+
+    // Cross-browser listeners (Safari <14 uses addListener/removeListener)
+    if (mqMobile.addEventListener) {
+      mqMobile.addEventListener('change', update)
+    } else if (mqMobile.addListener) {
+      mqMobile.addListener(update)
+    }
+
+    if (mqDesktop.addEventListener) {
+      mqDesktop.addEventListener('change', update)
+    } else if (mqDesktop.addListener) {
+      mqDesktop.addListener(update)
+    }
+
     return () => {
-      mqMobile.removeEventListener?.('change', update)
-      mqDesktop.removeEventListener?.('change', update)
+      if (mqMobile.removeEventListener) {
+        mqMobile.removeEventListener('change', update)
+      } else if (mqMobile.removeListener) {
+        mqMobile.removeListener(update)
+      }
+
+      if (mqDesktop.removeEventListener) {
+        mqDesktop.removeEventListener('change', update)
+      } else if (mqDesktop.removeListener) {
+        mqDesktop.removeListener(update)
+      }
     }
   }, [])
 
