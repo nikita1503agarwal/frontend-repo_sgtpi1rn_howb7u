@@ -11,11 +11,32 @@ export default function Hero() {
   // Foreground parallax beams
   const beamX1 = useTransform(scrollY, [0, 600], [0, -40])
   const beamX2 = useTransform(scrollY, [0, 600], [0, 50])
+  // Slow zoom for background photo
+  const bgScale = useTransform(scrollY, [0, 800], [1.05, 1.15])
 
   return (
     <section className="relative h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
-      {/* 3D Spline Scene (kept subtle, acts as atmospheric backdrop) */}
-      <div className="absolute inset-0">
+      {/* Construction background photography layer (parallax + slow zoom) */}
+      <motion.div
+        aria-hidden
+        style={{ scale: bgScale }}
+        className="absolute inset-0 bg-cover bg-center opacity-[0.2]"
+        // High-res crane/site image, lazy via CSS background is fine as it's decorative
+        // Source: Unsplash (construction site cranes at dusk)
+        // Note: Image is decorative and blended under gradients for brand tone
+        
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop')",
+          }}
+        />
+      </motion.div>
+
+      {/* Subtle 3D Spline layer kept very faint as atmospheric motion */}
+      <div className="absolute inset-0 opacity-[0.18] mix-blend-screen">
         <Spline scene="https://prod.spline.design/Gt5HUob8aGDxOUep/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
 
@@ -26,8 +47,11 @@ export default function Hero() {
       </div>
 
       {/* Atmospheric gradients */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-[#0a0c10] pointer-events-none" />
-      <div className="absolute inset-0 mix-blend-overlay bg-[radial-gradient(600px_circle_at_20%_10%,rgba(103,232,249,0.12),transparent),radial-gradient(600px_circle_at_80%_20%,rgba(251,191,36,0.1),transparent)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0c10] pointer-events-none" />
+      <div className="absolute inset-0 mix-blend-overlay bg-[radial-gradient(600px_circle_at_20%_10%,rgba(103,232,249,0.16),transparent),radial-gradient(700px_circle_at_80%_15%,rgba(251,191,36,0.12),transparent)]" />
+
+      {/* Hazard stripe accent (very subtle) */}
+      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rotate-12 opacity-[0.07] [mask-image:radial-gradient(closest-side,black,transparent)]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, transparent 10px, transparent 20px)' }} />
 
       {/* Parallax steel beams (foreground) */}
       <motion.div style={{ x: beamX1 }} className="pointer-events-none absolute -left-24 top-24 hidden md:block">
@@ -40,7 +64,7 @@ export default function Hero() {
       {/* Crane silhouette layer */}
       <motion.svg
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.25 }}
+        animate={{ opacity: 0.28 }}
         transition={{ duration: 1.2, delay: 0.2 }}
         className="absolute inset-x-0 bottom-0 w-[140%] -ml-[20%] h-[40vh] text-zinc-600/30"
         viewBox="0 0 1200 300"
@@ -64,6 +88,10 @@ export default function Hero() {
         </g>
       </motion.svg>
 
+      {/* Animated dust particles for industrial atmosphere */}
+      <Particles />
+
+      {/* Content (unchanged structure) */}
       <motion.div style={{ y, opacity, scale }} className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
@@ -143,6 +171,31 @@ function Badge({ icon, label }) {
     <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-zinc-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]">
       <span className="text-cyan-200/90">{icon}</span>
       <span className="text-sm">{label}</span>
+    </div>
+  )
+}
+
+function Particles() {
+  const dots = Array.from({ length: 36 })
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      {dots.map((_, i) => {
+        const size = Math.random() * 2 + 1
+        const left = Math.random() * 100
+        const top = Math.random() * 100
+        const delay = Math.random() * 6
+        const duration = 8 + Math.random() * 10
+        return (
+          <motion.span
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.6, 0.2, 0.7, 0], y: [-8, 12, -6, 10, -8] }}
+            transition={{ duration, delay, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute rounded-full bg-white"
+            style={{ width: size, height: size, left: `${left}%`, top: `${top}%`, filter: 'blur(0.5px)', opacity: 0.15 }}
+          />
+        )
+      })}
     </div>
   )
 }
