@@ -10,36 +10,48 @@
     --font-mona: 'Mona Sans', system-ui, sans-serif;
     --font-ibm-plex: 'IBM Plex Sans', system-ui, sans-serif;
     --font-manrope: 'Manrope', system-ui, sans-serif;
+    --app-bg: #0a0c10; /* site background (dark slate), adjust as desired */
+    --app-fg: #ffffff;
   }
 
   html {
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
     height: auto;
+    /* Ensure the root viewport never collapses on mobile */
     min-height: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
   }
 
   body {
     @apply antialiased;
     height: auto;
+    /* Allow content to grow while always covering the viewport on all browsers */
     min-height: 100%;
-    background-color: #0a0c10; /* fallback background to avoid white flashes */
-    color: white; /* ensure base text is visible if containers fail */
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+    /* Fallback background to avoid flash if containers momentarily collapse */
+    background-color: var(--app-bg);
+    color: var(--app-fg);
   }
 
   /* Ensure the React root can expand and never collapses on mobile */
   #root {
     height: auto;
     min-height: 100%;
-    /* Use dynamic viewport units for modern mobile browsers with safe toolbar handling */
     min-height: 100vh;
     min-height: 100svh;
+    min-height: 100dvh;
   }
 
   /* Media elements behave responsively and don't force unexpected heights */
   img, picture, video, canvas, svg { 
     max-width: 100%;
     height: auto;
+    display: block;
   }
 }
 
@@ -55,9 +67,10 @@
 .hero {
   min-height: 100vh;
   min-height: 100svh; /* modern mobile browsers */
+  min-height: 100dvh; /* fallbacks for browsers supporting dvh */
 }
 
-/* iOS/Safari/WebView fix: background-attachment: fixed can blank when combined with WebP/images */
+/* iOS/Safari/WebView fix: background-attachment: fixed can blank when combined with images */
 @media (max-width: 768px) {
   .hero, .background-section {
     background-attachment: scroll !important;
