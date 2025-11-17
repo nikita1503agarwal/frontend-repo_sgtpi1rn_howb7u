@@ -1,18 +1,48 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import Spline from '@splinetool/react-spline'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { Hammer, Ruler, Building2, HardHat } from 'lucide-react'
 
+// Lazy-load the heavy 3D Spline scene and render it only when idle on larger screens
+const LazySpline = lazy(() => import('@splinetool/react-spline'))
+
 export default function Hero() {
+  const prefersReduced = useReducedMotion()
   const { scrollY } = useScroll()
-  const y = useTransform(scrollY, [0, 600], [0, -80])
-  const opacity = useTransform(scrollY, [0, 400], [1, 0.7])
-  const scale = useTransform(scrollY, [0, 600], [1, 1.05])
+
+  // Lighter transforms and ranges to reduce GPU workload
+  const y = useTransform(scrollY, [0, 600], [0, -60])
+  const opacity = useTransform(scrollY, [0, 400], [1, 0.78])
+  const scale = useTransform(scrollY, [0, 600], [1, 1.03])
 
   // Foreground parallax beams
-  const beamX1 = useTransform(scrollY, [0, 600], [0, -40])
-  const beamX2 = useTransform(scrollY, [0, 600], [0, 50])
-  // Slow zoom for background photo
-  const bgScale = useTransform(scrollY, [0, 800], [1.05, 1.15])
+  const beamX1 = useTransform(scrollY, [0, 600], [0, -32])
+  const beamX2 = useTransform(scrollY, [0, 600], [0, 40])
+  // Slow zoom for background photo (narrowed range)
+  const bgScale = useTransform(scrollY, [0, 800], [1.02, 1.08])
+
+  // Only show Spline on medium+ screens, when user hasn't requested reduced motion, and when browser is idle
+  const [enableSpline, setEnableSpline] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener?.('change', update)
+    return () => mq.removeEventListener?.('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (prefersReduced || !isDesktop) return
+    const idle = (window.requestIdleCallback || window.requestAnimationFrame)
+    const id = idle(() => setEnableSpline(true))
+    return () => {
+      if ('cancelIdleCallback' in window) {
+        // @ts-ignore
+        window.cancelIdleCallback(id)
+      }
+    }
+  }, [prefersReduced, isDesktop])
 
   return (
     <section className="relative h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
@@ -20,51 +50,52 @@ export default function Hero() {
       <motion.div
         aria-hidden
         style={{ scale: bgScale }}
-        className="absolute inset-0 bg-cover bg-center opacity-[0.2]"
-        // High-res crane/site image, lazy via CSS background is fine as it's decorative
-        // Source: Unsplash (construction site cranes at dusk)
-        // Note: Image is decorative and blended under gradients for brand tone
-        
+        className="absolute inset-0 bg-cover bg-center opacity-[0.2] will-change-transform"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop')",
+              "url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1400&auto=format&fit=crop')",
+            backgroundSize: 'cover',
           }}
         />
       </motion.div>
 
-      {/* Subtle 3D Spline layer kept very faint as atmospheric motion */}
-      <div className="absolute inset-0 opacity-[0.18] mix-blend-screen">
-        <Spline scene="https://prod.spline.design/Gt5HUob8aGDxOUep/scene.splinecode" style={{ width: '100%', height: '100%' }} />
-      </div>
+      {/* Subtle 3D Spline layer (lazy, desktop-only, idle) */}
+      {enableSpline && (
+        <div className="absolute inset-0 opacity-[0.16] mix-blend-screen pointer-events-none will-change-transform">
+          <Suspense fallback={null}>
+            <LazySpline scene="https://prod.spline.design/Gt5HUob8aGDxOUep/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+          </Suspense>
+        </div>
+      )}
 
       {/* Blueprint grid overlay */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.08] [background-size:32px_32px] [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)]" />
-        <div className="absolute inset-0 opacity-[0.06] [background-size:128px_128px] [background-image:linear-gradient(to_right,rgba(103,232,249,0.18)_1px,transparent_1px),linear-gradient(to_bottom,rgba(251,191,36,0.15)_1px,transparent_1px)]" />
+        <div className="absolute inset-0 opacity-[0.07] [background-size:32px_32px] [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)]" />
+        <div className="absolute inset-0 opacity-[0.05] [background-size:128px_128px] [background-image:linear-gradient(to_right,rgba(103,232,249,0.16)_1px,transparent_1px),linear-gradient(to_bottom,rgba(251,191,36,0.12)_1px,transparent_1px)]" />
       </div>
 
       {/* Atmospheric gradients */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0a0c10] pointer-events-none" />
-      <div className="absolute inset-0 mix-blend-overlay bg-[radial-gradient(600px_circle_at_20%_10%,rgba(103,232,249,0.16),transparent),radial-gradient(700px_circle_at_80%_15%,rgba(251,191,36,0.12),transparent)]" />
+      <div className="absolute inset-0 mix-blend-overlay bg-[radial-gradient(600px_circle_at_20%_10%,rgba(103,232,249,0.14),transparent),radial-gradient(700px_circle_at_80%_15%,rgba(251,191,36,0.1),transparent)]" />
 
       {/* Hazard stripe accent (very subtle) */}
-      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rotate-12 opacity-[0.07] [mask-image:radial-gradient(closest-side,black,transparent)]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, transparent 10px, transparent 20px)' }} />
+      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rotate-12 opacity-[0.06] [mask-image:radial-gradient(closest-side,black,transparent)]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, transparent 10px, transparent 20px)' }} />
 
       {/* Parallax steel beams (foreground) */}
-      <motion.div style={{ x: beamX1 }} className="pointer-events-none absolute -left-24 top-24 hidden md:block">
+      <motion.div style={{ x: beamX1 }} className="pointer-events-none absolute -left-24 top-24 hidden md:block will-change-transform">
         <div className="h-1 w-[60vw] rotate-6 bg-gradient-to-r from-zinc-700/70 via-zinc-500/80 to-zinc-700/70 shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]" />
       </motion.div>
-      <motion.div style={{ x: beamX2 }} className="pointer-events-none absolute -right-28 bottom-28 hidden md:block">
+      <motion.div style={{ x: beamX2 }} className="pointer-events-none absolute -right-28 bottom-28 hidden md:block will-change-transform">
         <div className="h-1.5 w-[55vw] -rotate-3 bg-gradient-to-r from-zinc-700/70 via-zinc-500/80 to-zinc-700/70 shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]" />
       </motion.div>
 
       {/* Crane silhouette layer */}
       <motion.svg
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.28 }}
+        animate={{ opacity: 0.24 }}
         transition={{ duration: 1.2, delay: 0.2 }}
         className="absolute inset-x-0 bottom-0 w-[140%] -ml-[20%] h-[40vh] text-zinc-600/30"
         viewBox="0 0 1200 300"
@@ -76,7 +107,6 @@ export default function Hero() {
             <stop offset="100%" stopColor="#fbbf24" stopOpacity="0.25" />
           </linearGradient>
         </defs>
-        {/* Simple skyline + cranes */}
         <path d="M0 260 L1200 260 L1200 300 L0 300 Z" fill="url(#crane)" opacity="0.15" />
         <g stroke="url(#crane)" strokeWidth="2" fill="none" opacity="0.6">
           <path d="M80 260 L80 120 L200 120" />
@@ -88,11 +118,11 @@ export default function Hero() {
         </g>
       </motion.svg>
 
-      {/* Animated dust particles for industrial atmosphere */}
-      <Particles />
+      {/* Animated dust particles for industrial atmosphere (fewer, disabled on reduced motion) */}
+      {!prefersReduced && <Particles count={14} />}
 
-      {/* Content (unchanged structure) */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+      {/* Content */}
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -175,27 +205,28 @@ function Badge({ icon, label }) {
   )
 }
 
-function Particles() {
-  const dots = Array.from({ length: 36 })
+function Particles({ count = 14 }) {
+  // Precompute particle static positions once for stability and less layout work
+  const seeds = useMemo(() => Array.from({ length: count }, (_, i) => ({
+    size: 1 + ((i * 7) % 3),
+    left: ((i * 37) % 100),
+    top: ((i * 53) % 100),
+    delay: (i * 0.37) % 6,
+    duration: 8 + ((i * 1.3) % 8),
+  })), [count])
+
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0">
-      {dots.map((_, i) => {
-        const size = Math.random() * 2 + 1
-        const left = Math.random() * 100
-        const top = Math.random() * 100
-        const delay = Math.random() * 6
-        const duration = 8 + Math.random() * 10
-        return (
-          <motion.span
-            key={i}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.6, 0.2, 0.7, 0], y: [-8, 12, -6, 10, -8] }}
-            transition={{ duration, delay, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute rounded-full bg-white"
-            style={{ width: size, height: size, left: `${left}%`, top: `${top}%`, filter: 'blur(0.5px)', opacity: 0.15 }}
-          />
-        )
-      })}
+      {seeds.map((p, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.5, 0.2, 0.6, 0], y: [-6, 10, -5, 8, -6] }}
+          transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute rounded-full bg-white will-change-transform"
+          style={{ width: p.size, height: p.size, left: `${p.left}%`, top: `${p.top}%`, filter: 'blur(0.5px)', opacity: 0.14 }}
+        />
+      ))}
     </div>
   )
 }
