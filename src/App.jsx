@@ -19,21 +19,25 @@ export default function App() {
       transition={{ type: 'tween', duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       reducedMotion={{ reduce: 'user', noPreference: 'motion' }}
     >
-      <div className="min-h-full bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white">
+      {/* Root container uses min-h-full so content can extend beyond viewport and still fill screen */}
+      <div className="min-h-full bg-[#0a0c10] text-white selection:bg-cyan-300/30 selection:text-white flex flex-col">
         <Navbar />
         {/* Spacer to offset the fixed header height so content doesn't sit underneath */}
         <div aria-hidden className="h-20 sm:h-24" />
-        <Hero />
-        <Marquee />
-        <Stats />
-        <About />
-        <Services />
-        <Projects />
-        <Process />
-        <Values />
-        <Testimonials />
-        <Legacy />
-        <CTA />
+        {/* Main content area */}
+        <div className="flex-1 flex flex-col">
+          <Hero />
+          <Marquee />
+          <Stats />
+          <About />
+          <Services />
+          <Projects />
+          <Process />
+          <Values />
+          <Testimonials />
+          <Legacy />
+          <CTA />
+        </div>
         <Footer />
       </div>
     </MotionConfig>
