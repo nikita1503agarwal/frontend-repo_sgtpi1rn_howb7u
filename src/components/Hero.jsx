@@ -51,26 +51,33 @@ export default function Hero() {
     }
   }, [prefersReduced, isDesktop])
 
-  // Highly compressed WebP background photos (smaller bandwidth/GPU)
-  const bgUrl = isMobile
-    ? "https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=webp&q=45&w=900&fit=crop"
-    : "https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=webp&q=55&w=1600&fit=crop"
+  // Highly compressed background photos with WebP + JPEG fallback
+  const bgWebpMobile = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=webp&q=45&w=900&fit=crop'
+  const bgWebpDesktop = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=webp&q=55&w=1600&fit=crop'
+  const bgJpgMobile = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=jpg&q=55&w=900&fit=crop'
+  const bgJpgDesktop = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?fm=jpg&q=65&w=1600&fit=crop'
+  const bgWebp = isMobile ? bgWebpMobile : bgWebpDesktop
+  const bgJpg = isMobile ? bgJpgMobile : bgJpgDesktop
 
   return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
+    <section className="relative min-h-screen md:min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
       {/* Construction background photography layer (parallax + slow zoom) */}
       <motion.div
         aria-hidden
         style={{ scale: bgScale }}
-        className="absolute inset-0 bg-cover bg-center opacity-[0.2] will-change-transform"
+        className="absolute inset-0 opacity-[0.2] will-change-transform"
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('${bgUrl}')`,
-            backgroundSize: 'cover',
-          }}
-        />
+        {/* Use <picture> for WebP with JPEG fallback to avoid blank backgrounds on older mobile browsers */}
+        <picture>
+          <source srcSet={bgWebp} type="image/webp" />
+          <img
+            src={bgJpg}
+            alt="Construction site background"
+            className="h-full w-full object-cover object-center select-none pointer-events-none"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
       </motion.div>
 
       {/* Subtle 3D Spline layer (lazy, desktop-only, idle) */}
@@ -133,7 +140,7 @@ export default function Hero() {
       {!prefersReduced && !isMobile && <Particles count={10} />}
 
       {/* Content */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-[100svh] flex flex-col items-center justify-center text-center px-6 will-change-transform pb-24 sm:pb-0">
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-[100svh] md:min-h-0 flex flex-col items-center justify-center text-center px-6 will-change-transform pb-24 sm:pb-0">
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
