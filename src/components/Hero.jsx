@@ -7,31 +7,38 @@ const LazySpline = lazy(() => import('@splinetool/react-spline'))
 
 export default function Hero() {
   const prefersReduced = useReducedMotion()
-  const { scrollY } = useScroll()
 
-  // Lighter transforms and ranges to reduce GPU workload
-  const y = useTransform(scrollY, [0, 600], [0, -60])
-  const opacity = useTransform(scrollY, [0, 400], [1, 0.78])
-  const scale = useTransform(scrollY, [0, 600], [1, 1.03])
-
-  // Foreground parallax beams
-  const beamX1 = useTransform(scrollY, [0, 600], [0, -32])
-  const beamX2 = useTransform(scrollY, [0, 600], [0, 40])
-  // Slow zoom for background photo (narrowed range)
-  const bgScale = useTransform(scrollY, [0, 800], [1.02, 1.08])
-
-  // Only show Spline on medium+ screens, when user hasn't requested reduced motion, and when browser is idle
-  const [enableSpline, setEnableSpline] = useState(false)
+  // Detect mobile viewport to soften/disable heavy effects
+  const [isMobile, setIsMobile] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
-
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 1024px)')
-    const update = () => setIsDesktop(mq.matches)
+    const mqMobile = window.matchMedia('(max-width: 640px)')
+    const mqDesktop = window.matchMedia('(min-width: 1024px)')
+    const update = () => {
+      setIsMobile(mqMobile.matches)
+      setIsDesktop(mqDesktop.matches)
+    }
     update()
-    mq.addEventListener?.('change', update)
-    return () => mq.removeEventListener?.('change', update)
+    mqMobile.addEventListener?.('change', update)
+    mqDesktop.addEventListener?.('change', update)
+    return () => {
+      mqMobile.removeEventListener?.('change', update)
+      mqDesktop.removeEventListener?.('change', update)
+    }
   }, [])
 
+  // Scroll-based transforms (disabled on mobile or reduced-motion)
+  const shouldAnimateScroll = !prefersReduced && !isMobile
+  const { scrollY } = useScroll()
+  const y = shouldAnimateScroll ? useTransform(scrollY, [0, 600], [0, -60]) : 0
+  const opacity = shouldAnimateScroll ? useTransform(scrollY, [0, 400], [1, 0.86]) : 1
+  const scale = shouldAnimateScroll ? useTransform(scrollY, [0, 600], [1, 1.02]) : 1
+  const beamX1 = shouldAnimateScroll ? useTransform(scrollY, [0, 600], [0, -24]) : 0
+  const beamX2 = shouldAnimateScroll ? useTransform(scrollY, [0, 600], [0, 28]) : 0
+  const bgScale = shouldAnimateScroll ? useTransform(scrollY, [0, 800], [1.01, 1.06]) : 1.01
+
+  // Only show Spline on desktop, when user hasn't requested reduced motion, and when browser is idle
+  const [enableSpline, setEnableSpline] = useState(false)
   useEffect(() => {
     if (prefersReduced || !isDesktop) return
     const idle = (window.requestIdleCallback || window.requestAnimationFrame)
@@ -44,6 +51,11 @@ export default function Hero() {
     }
   }, [prefersReduced, isDesktop])
 
+  // Smaller background photo on mobile to reduce bandwidth/GPU
+  const bgUrl = isMobile
+    ? "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=900&auto=format&fit=crop"
+    : "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop"
+
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
       {/* Construction background photography layer (parallax + slow zoom) */}
@@ -55,8 +67,7 @@ export default function Hero() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1400&auto=format&fit=crop')",
+            backgroundImage: `url('${bgUrl}')`,
             backgroundSize: 'cover',
           }}
         />
@@ -73,8 +84,8 @@ export default function Hero() {
 
       {/* Blueprint grid overlay */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.07] [background-size:32px_32px] [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)]" />
-        <div className="absolute inset-0 opacity-[0.05] [background-size:128px_128px] [background-image:linear-gradient(to_right,rgba(103,232,249,0.16)_1px,transparent_1px),linear-gradient(to_bottom,rgba(251,191,36,0.12)_1px,transparent_1px)]" />
+        <div className="absolute inset-0 opacity-[0.06] [background-size:32px_32px] [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)]" />
+        <div className="absolute inset-0 opacity-[0.04] [background-size:128px_128px] [background-image:linear-gradient(to_right,rgba(103,232,249,0.16)_1px,transparent_1px),linear-gradient(to_bottom,rgba(251,191,36,0.12)_1px,transparent_1px)]" />
       </div>
 
       {/* Atmospheric gradients */}
@@ -82,22 +93,22 @@ export default function Hero() {
       <div className="absolute inset-0 mix-blend-overlay bg-[radial-gradient(600px_circle_at_20%_10%,rgba(103,232,249,0.14),transparent),radial-gradient(700px_circle_at_80%_15%,rgba(251,191,36,0.1),transparent)]" />
 
       {/* Hazard stripe accent (very subtle) */}
-      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rotate-12 opacity-[0.06] [mask-image:radial-gradient(closest-side,black,transparent)]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, transparent 10px, transparent 20px)' }} />
+      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rotate-12 opacity-[0.05] [mask-image:radial-gradient(closest-side,black,transparent)]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, transparent 10px, transparent 20px)' }} />
 
       {/* Parallax steel beams (foreground) */}
       <motion.div style={{ x: beamX1 }} className="pointer-events-none absolute -left-24 top-24 hidden md:block will-change-transform">
-        <div className="h-1 w-[60vw] rotate-6 bg-gradient-to-r from-zinc-700/70 via-zinc-500/80 to-zinc-700/70 shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]" />
+        <div className="h-1 w-[60vw] rotate-6 bg-gradient-to-r from-zinc-700/60 via-zinc-500/70 to-zinc-700/60 shadow-[0_0_30px_-12px_rgba(0,0,0,0.5)]" />
       </motion.div>
       <motion.div style={{ x: beamX2 }} className="pointer-events-none absolute -right-28 bottom-28 hidden md:block will-change-transform">
-        <div className="h-1.5 w-[55vw] -rotate-3 bg-gradient-to-r from-zinc-700/70 via-zinc-500/80 to-zinc-700/70 shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]" />
+        <div className="h-1.5 w-[55vw] -rotate-3 bg-gradient-to-r from-zinc-700/60 via-zinc-500/70 to-zinc-700/60 shadow-[0_0_30px_-12px_rgba(0,0,0,0.5)]" />
       </motion.div>
 
-      {/* Crane silhouette layer */}
+      {/* Crane silhouette layer (hidden on mobile for lighter render) */}
       <motion.svg
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.24 }}
-        transition={{ duration: 1.2, delay: 0.2 }}
-        className="absolute inset-x-0 bottom-0 w-[140%] -ml-[20%] h-[40vh] text-zinc-600/30"
+        transition={{ duration: 0.9, delay: 0.15 }}
+        className="hidden sm:block absolute inset-x-0 bottom-0 w-[140%] -ml-[20%] h-[40vh] text-zinc-600/30"
         viewBox="0 0 1200 300"
         preserveAspectRatio="xMidYMax slice"
       >
@@ -118,33 +129,33 @@ export default function Hero() {
         </g>
       </motion.svg>
 
-      {/* Animated dust particles for industrial atmosphere (fewer, disabled on reduced motion) */}
-      {!prefersReduced && <Particles count={14} />}
+      {/* Animated dust particles (disabled on mobile or reduced-motion) */}
+      {!prefersReduced && !isMobile && <Particles count={10} />}
 
       {/* Content */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-[100svh] flex flex-col items-center justify-center text-center px-6 will-change-transform pb-28 sm:pb-0">
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-[100svh] flex flex-col items-center justify-center text-center px-6 will-change-transform pb-24 sm:pb-0">
         <motion.span
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
+          transition={{ delay: 0.15, duration: 0.6, ease: 'easeOut' }}
           className="uppercase tracking-[0.35em] text-xs md:text-sm text-zinc-300"
         >
           Precision • Innovation • Excellence
         </motion.span>
 
         <motion.h1
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.9, ease: 'easeOut' }}
+          transition={{ delay: 0.3, duration: 0.6, ease: 'easeOut' }}
           className="mt-5 text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] text-white"
         >
           Building the Future with <span className="bg-gradient-to-tr from-amber-400 to-cyan-300 bg-clip-text text-transparent">Construction</span> Mastery
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.9, ease: 'easeOut' }}
+          transition={{ delay: 0.45, duration: 0.6, ease: 'easeOut' }}
           className="mt-6 max-w-2xl text-zinc-300 text-base md:text-lg"
         >
           From groundbreaking to grand opening, we deliver structural integrity, architectural finesse, and schedule certainty.
@@ -152,9 +163,9 @@ export default function Hero() {
 
         {/* Capability badges */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75, duration: 0.8 }}
+          transition={{ delay: 0.6, duration: 0.55 }}
           className="mt-6 flex flex-wrap items-center justify-center gap-3"
         >
           <Badge icon={<HardHat className="h-4 w-4" />} label="General Contracting" />
@@ -165,9 +176,9 @@ export default function Hero() {
 
         {/* CTAs - flow layout on mobile, centered with relative spacing */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.95, duration: 0.8 }}
+          transition={{ delay: 0.75, duration: 0.55 }}
           className="mt-8 sm:mt-10 mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-[28rem]"
         >
           <a href="#projects" className="group inline-flex justify-center items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-white backdrop-blur-md transition hover:bg-white/15 w-full sm:w-auto">
@@ -183,7 +194,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 0.9, duration: 0.5 }}
           className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400 pointer-events-none"
         >
           <div className="flex items-center gap-4 text-xs uppercase tracking-widest">
@@ -210,14 +221,14 @@ function Badge({ icon, label }) {
   )
 }
 
-function Particles({ count = 14 }) {
+function Particles({ count = 10 }) {
   // Precompute particle static positions once for stability and less layout work
   const seeds = useMemo(() => Array.from({ length: count }, (_, i) => ({
     size: 1 + ((i * 7) % 3),
     left: ((i * 37) % 100),
     top: ((i * 53) % 100),
     delay: (i * 0.37) % 6,
-    duration: 8 + ((i * 1.3) % 8),
+    duration: 8 + ((i * 1.1) % 6),
   })), [count])
 
   return (
@@ -226,9 +237,9 @@ function Particles({ count = 14 }) {
         <motion.span
           key={i}
           initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.5, 0.2, 0.6, 0], y: [-6, 10, -5, 8, -6] }}
+          animate={{ opacity: [0, 0.45, 0.2, 0.55, 0], y: [-5, 8, -4, 6, -5] }}
           transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute rounded-full bg-white will-change-transform"
+          className="absolute rounded-full bg-white"
           style={{ width: p.size, height: p.size, left: `${p.left}%`, top: `${p.top}%`, filter: 'blur(0.5px)', opacity: 0.14 }}
         />
       ))}
