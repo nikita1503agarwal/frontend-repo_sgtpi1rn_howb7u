@@ -15,10 +15,31 @@
   html {
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
+    height: auto;
+    min-height: 100%;
   }
 
   body {
     @apply antialiased;
+    height: auto;
+    min-height: 100%;
+    background-color: #0a0c10; /* fallback background to avoid white flashes */
+    color: white; /* ensure base text is visible if containers fail */
+  }
+
+  /* Ensure the React root can expand and never collapses on mobile */
+  #root {
+    height: auto;
+    min-height: 100%;
+    /* Use dynamic viewport units for modern mobile browsers with safe toolbar handling */
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  /* Media elements behave responsively and don't force unexpected heights */
+  img, picture, video, canvas, svg { 
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -33,6 +54,7 @@
 /* Prefer min-height over fixed height for mobile viewport stability */
 .hero {
   min-height: 100vh;
+  min-height: 100svh; /* modern mobile browsers */
 }
 
 /* iOS/Safari/WebView fix: background-attachment: fixed can blank when combined with WebP/images */
