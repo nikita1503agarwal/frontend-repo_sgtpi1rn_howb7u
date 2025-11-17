@@ -22,7 +22,7 @@ const projects = [
 function Card({ p, index }) {
   return (
     <motion.div
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -6, rotateX: 2 }}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -41,7 +41,7 @@ function Card({ p, index }) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0" style={{ pointerEvents: 'none', background: 'radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(255,255,255,0.08), transparent 40%)' }} />
+        <div className="absolute inset-0" style={{ pointerEvents: 'none', background: 'radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(103,232,249,0.12), transparent 40%)' }} />
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-6">
         <h3 className="text-white text-xl font-semibold">{p.title}</h3>
@@ -57,9 +57,9 @@ export default function Projects() {
   const y = useTransform(scrollYProgress, [0, 1], [40, -40])
 
   return (
-    <section id="projects" ref={ref} className="relative bg-[#0b0d0f] text-white py-28">
+    <section id="projects" ref={ref} className="relative bg-[#0a0c10] text-white py-28">
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(251,191,36,0.06),transparent_40%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(103,232,249,0.08),transparent_40%)]" />
       </div>
       <div className="container mx-auto px-6">
         <motion.h2 style={{ y }} className="text-3xl md:text-5xl font-extrabold">Featured Projects</motion.h2>

@@ -15,10 +15,10 @@ export default function About() {
   }
 
   return (
-    <section id="about" className="relative bg-[#0b0d0f] text-white py-28 overflow-hidden">
+    <section id="about" className="relative bg-[#0a0c10] text-white py-28 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(251,191,36,0.08),transparent_40%)]" />
-        <div className="absolute inset-y-0 left-0 right-0 opacity-[0.08]" style={{ backgroundSize: '40px 40px', backgroundImage: 'linear-gradient(to right, #fff1 1px, transparent 1px), linear-gradient(to bottom, #fff1 1px, transparent 1px)' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(251,191,36,0.06),transparent_40%)]" />
+        <div className="absolute inset-y-0 left-0 right-0 opacity-[0.06]" style={{ backgroundSize: '40px 40px', backgroundImage: 'linear-gradient(to right, #fff1 1px, transparent 1px), linear-gradient(to bottom, #fff1 1px, transparent 1px)' }} />
       </div>
 
       <div className="container mx-auto px-6">
@@ -42,7 +42,7 @@ export default function About() {
                 ['Sustainable', 'LEED-focused methodologies and materials'],
               ].map(([title, caption]) => (
                 <div key={title} className="p-5 rounded-xl bg-white/5 border border-white/10">
-                  <p className="text-amber-400 font-semibold">{title}</p>
+                  <p className="bg-gradient-to-tr from-amber-400 to-cyan-300 bg-clip-text text-transparent font-semibold">{title}</p>
                   <p className="text-sm text-zinc-300 mt-2">{caption}</p>
                 </div>
               ))}

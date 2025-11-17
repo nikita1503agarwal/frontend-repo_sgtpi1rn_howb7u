@@ -9,7 +9,7 @@ export default function Legacy() {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.9])
 
   return (
-    <section ref={ref} className="relative bg-[#0b0d0f] text-white py-28 overflow-hidden">
+    <section id="legacy" ref={ref} className="relative bg-[#0a0c10] text-white py-28 overflow-hidden">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl md:text-5xl font-extrabold">Our Legacy</h2>
         <p className="text-zinc-300 mt-4 max-w-2xl">A timeline of craft, growth, and enduring partnerships.</p>
@@ -25,10 +25,10 @@ export default function Legacy() {
                 { year: '2008', text: 'Expanded into large-scale industrial and civic projects.' },
                 { year: '2018', text: 'Adopted BIM and prefabrication across our portfolio.' },
               ].map((item) => (
-                <div key={item.year} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                  <div className="text-amber-400 font-semibold tracking-wide">{item.year}</div>
+                <motion.div key={item.year} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.02] p-6">
+                  <div className="bg-gradient-to-tr from-cyan-300 to-amber-400 bg-clip-text text-transparent font-semibold tracking-wide">{item.year}</div>
                   <div className="text-zinc-300 mt-2">{item.text}</div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

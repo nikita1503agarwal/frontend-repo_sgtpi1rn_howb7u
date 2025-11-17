@@ -12,7 +12,7 @@ const values = [
 
 export default function Values() {
   return (
-    <section className="relative bg-[#0b0d0f] text-white py-28">
+    <section id="values" className="relative bg-[#0a0c10] text-white py-28">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl md:text-5xl font-extrabold">Our Values</h2>
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -35,14 +35,14 @@ export default function Values() {
                   <rect x="8" y="8" width="calc(100%-16)" height="calc(100%-16)" rx="16" ry="16" fill="none" stroke="url(#g)" strokeWidth="1" />
                   <defs>
                     <linearGradient id="g" x1="0" x2="1">
-                      <stop offset="0%" stopColor="#fff" />
+                      <stop offset="0%" stopColor="#67e8f9" />
                       <stop offset="100%" stopColor="#fbbf24" />
                     </linearGradient>
                   </defs>
                 </svg>
               </motion.div>
               <div className="flex items-center gap-4">
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="h-12 w-12 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="h-12 w-12 rounded-xl bg-gradient-to-tr from-cyan-300/15 to-amber-400/15 border border-white/10 flex items-center justify-center text-cyan-200">
                   <Icon />
                 </motion.div>
                 <h3 className="text-lg font-semibold">{title}</h3>
