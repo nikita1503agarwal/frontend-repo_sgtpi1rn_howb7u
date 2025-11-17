@@ -60,7 +60,7 @@ export default function Hero() {
   const bgJpg = isMobile ? bgJpgMobile : bgJpgDesktop
 
   return (
-    <section className="relative min-h-screen md:min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
+    <section className="relative min-h-screen lg:min-h-[100svh] w-full overflow-hidden bg-[#0a0c10]">
       {/* Construction background photography layer (parallax + slow zoom) */}
       <motion.div
         aria-hidden
@@ -68,12 +68,12 @@ export default function Hero() {
         className="absolute inset-0 opacity-[0.2] will-change-transform"
       >
         {/* Use <picture> for WebP with JPEG fallback to avoid blank backgrounds on older mobile browsers */}
-        <picture>
+        <picture className="block h-full w-full">
           <source srcSet={bgWebp} type="image/webp" />
           <img
             src={bgJpg}
             alt="Construction site background"
-            className="h-full w-full object-cover object-center select-none pointer-events-none"
+            className="block h-full w-full object-cover object-center select-none pointer-events-none"
             loading="lazy"
             decoding="async"
           />
@@ -140,7 +140,7 @@ export default function Hero() {
       {!prefersReduced && !isMobile && <Particles count={10} />}
 
       {/* Content */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-[100svh] md:min-h-0 flex flex-col items-center justify-center text-center px-6 will-change-transform pb-24 sm:pb-0">
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 min-h-screen lg:min-h-0 flex flex-col items-center justify-center text-center px-6 will-change-transform pb-24 sm:pb-0">
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -197,12 +197,12 @@ export default function Hero() {
           </a>
         </motion.div>
 
-        {/* Trust bar */}
+        {/* Trust bar - static on mobile to prevent overlap, absolute on larger screens */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.5 }}
-          className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400 pointer-events-none"
+          className="pointer-events-none mt-10 sm:mt-0 sm:absolute sm:bottom-8 left-1/2 sm:-translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400"
         >
           <div className="flex items-center gap-4 text-xs uppercase tracking-widest">
             <span className="text-zinc-300/90">Licensed</span>
