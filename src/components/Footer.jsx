@@ -18,7 +18,7 @@ export default function Footer() {
             </a>
           </div>
         </div>
-        <div className="mt-12 text-sm text-zinc-500">© {new Date().getFullYear()} Your Company. All rights reserved.</div>
+        <div className="mt-12 text-sm text-zinc-500">© 2025 cr8.click, All rights reserved.</div>
       </div>
     </footer>
   )
