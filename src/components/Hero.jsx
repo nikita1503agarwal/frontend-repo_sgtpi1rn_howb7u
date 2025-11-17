@@ -122,7 +122,7 @@ export default function Hero() {
       {!prefersReduced && <Particles count={14} />}
 
       {/* Content */}
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform">
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 will-change-transform pb-28 sm:pb-0">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -164,12 +164,12 @@ export default function Hero() {
         </motion.div>
 
         {/* CTAs */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.95, duration: 0.8 }} className="mt-10 flex items-center gap-4">
-          <a href="#projects" className="group inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-white backdrop-blur-md transition hover:bg-white/15">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.95, duration: 0.8 }} className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none">
+          <a href="#projects" className="group inline-flex justify-center items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-white backdrop-blur-md transition hover:bg-white/15 w-full sm:w-auto">
             <span className="font-semibold">Explore Projects</span>
             <span className="h-2 w-2 rounded-full bg-gradient-to-tr from-amber-400 to-cyan-300 shadow-[0_0_20px_2px_rgba(103,232,249,0.5)] group-hover:scale-110 transition-transform" />
           </a>
-          <a href="#services" className="inline-flex items-center rounded-full px-6 py-3 text-zinc-200 hover:text-white transition">
+          <a href="#services" className="inline-flex justify-center items-center rounded-full px-6 py-3 text-zinc-200 hover:text-white transition w-full sm:w-auto">
             Our Services
           </a>
         </motion.div>
@@ -179,7 +179,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400"
+          className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-zinc-400 pointer-events-none"
         >
           <div className="flex items-center gap-4 text-xs uppercase tracking-widest">
             <span className="text-zinc-300/90">Licensed</span>
